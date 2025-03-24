@@ -27,7 +27,7 @@ func NewDriver(model, apikey string) (*Driver, error) {
 		option.WithAPIKey(apikey), // defaults to os.LookupEnv("OPENAI_API_KEY")
 	)
 	return &Driver{
-		client: client,
+		client: &client,
 		model:  model,
 	}, nil
 }
@@ -38,17 +38,15 @@ type Driver struct {
 }
 
 func (d *Driver) QueryWithText(ctx context.Context, input string, context []string) ([]string, map[string]int64, error) {
-
-	messageParts := make([]openai.ChatCompletionContentPartUnionParam, len(context)+1)
-	messageParts[0] = openai.TextPart(input)
-	for i, c := range context {
-		messageParts[i+1] = openai.TextPart(c)
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.UserMessage(input),
+	}
+	for _, c := range context {
+		messages = append(messages, openai.UserMessage(c))
 	}
 	param := openai.ChatCompletionNewParams{
-		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
-			openai.UserMessageParts(messageParts...),
-		}),
-		Model: openai.String(d.model),
+		Messages: messages,
+		Model:    d.model,
 	}
 	completion, err := d.client.Chat.Completions.New(ctx, param)
 	if err != nil {
@@ -97,15 +95,21 @@ func (d *Driver) QueryWithImage(ctx context.Context, input string, fsys fs.FS, p
 	if _, err := enc.Write(imgData); err != nil {
 		return nil, nil, errors.Wrap(err, "cannot encode file")
 	}
+	var content = openai.ChatCompletionContentPartUnionParam{
+		OfImageURL: &openai.ChatCompletionContentPartImageParam{
+			ImageURL: openai.ChatCompletionContentPartImageImageURLParam{
+				URL: fmt.Sprintf("data:%s;base64,%s", contentType, buf.String()),
+			},
+		},
+	}
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.UserMessage(input),
+		openai.UserMessage([]openai.ChatCompletionContentPartUnionParam{content}),
+	}
 
 	param := openai.ChatCompletionNewParams{
-		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
-			openai.UserMessageParts(
-				openai.TextPart(input),
-				openai.ImagePart(fmt.Sprintf("data:%s;base64,%s", contentType, buf.String())),
-			),
-		}),
-		Model: openai.String(d.model),
+		Messages: messages,
+		Model:    d.model,
 	}
 	completion, err := d.client.Chat.Completions.New(ctx, param)
 	if err != nil {

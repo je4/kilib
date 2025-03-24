@@ -40,6 +40,7 @@ github.com/liushuangls/go-anthropic/v2 v2.14.1 h1:t07ckMN7qLkI4yIPJMPNjkwyLV6SEo
 github.com/liushuangls/go-anthropic/v2 v2.14.1/go.mod h1:HQ3//ql9jcgP6zpL5R11OkHijWuYVH1iwJSSF0x+Jlk=
 github.com/openai/openai-go v0.1.0-alpha.52 h1:GftNTIBZ3q5Dg2F99lypgJmu1DG8TjMVdgx4pXkmOTY=
 github.com/openai/openai-go v0.1.0-alpha.52/go.mod h1:3SdE6BffOX9HPEQv8IL/fi3LYZ5TUpRYaqGQZbyk11A=
+github.com/openai/openai-go v0.1.0-beta.2/go.mod h1:g461MYGXEXBVdV5SaR/5tNzNbSfwTBBefwc+LlDCK0Y=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

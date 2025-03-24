@@ -7,7 +7,7 @@ require (
 	github.com/google/generative-ai-go v0.19.0
 	github.com/google/uuid v1.6.0
 	github.com/liushuangls/go-anthropic/v2 v2.14.1
-	github.com/openai/openai-go v0.1.0-alpha.52
+	github.com/openai/openai-go v0.1.0-beta.2
 	google.golang.org/api v0.227.0
 )
 
