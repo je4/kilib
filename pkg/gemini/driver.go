@@ -7,6 +7,7 @@ import (
 	"github.com/google/generative-ai-go/genai"
 	"github.com/google/uuid"
 	"github.com/je4/kilib/pkg/ki"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"io/fs"
 )
@@ -25,6 +26,17 @@ func NewDriver(model, apikey string) (*Driver, error) {
 	client, err := genai.NewClient(ctx, option.WithAPIKey(apikey))
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create genai client")
+	}
+	iter := client.ListModels(context.Background())
+	for {
+		m, err := iter.Next()
+		if errors.Is(err, iterator.Done) {
+			break
+		}
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(m.Name, m.Description)
 	}
 	return &Driver{
 		client: client,
