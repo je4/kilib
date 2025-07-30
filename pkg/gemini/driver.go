@@ -36,7 +36,7 @@ func NewDriver(model, apikey string) (*Driver, error) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(m.Name, m.Description)
+		fmt.Println(m.Name, m.SupportedGenerationMethods)
 	}
 	return &Driver{
 		client: client,
