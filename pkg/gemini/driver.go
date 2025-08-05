@@ -4,7 +4,6 @@ import (
 	"context"
 	"emperror.dev/errors"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/je4/kilib/pkg/ki"
 	"google.golang.org/genai"
 	"io/fs"
@@ -50,6 +49,7 @@ func (d *Driver) CreateCache(ctx context.Context, context []string, ttl time.Dur
 	cc := &genai.CreateCachedContentConfig{
 		TTL: ttl,
 		Contents: []*genai.Content{&genai.Content{
+			Role:  "user",
 			Parts: make([]*genai.Part, len(context)),
 		},
 		},
@@ -93,7 +93,7 @@ func (d *Driver) QueryWithText(ctx context.Context, input string, context []stri
 	for _, cand := range resp.Candidates {
 		if cand.Content != nil {
 			for _, part := range cand.Content.Parts {
-				result = append(result, fmt.Sprintf("%v", part))
+				result = append(result, fmt.Sprintf("%v", part.Text))
 			}
 		}
 	}

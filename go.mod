@@ -4,7 +4,6 @@ go 1.24.5
 
 require (
 	emperror.dev/errors v0.8.1
-	github.com/google/uuid v1.6.0
 	github.com/liushuangls/go-anthropic/v2 v2.15.2
 	github.com/openai/openai-go v1.12.0
 	google.golang.org/genai v1.18.0
