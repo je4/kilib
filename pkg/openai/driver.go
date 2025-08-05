@@ -12,6 +12,7 @@ import (
 	"io/fs"
 	"mime"
 	"net/http"
+	"time"
 )
 
 var TokenFields = []string{
@@ -35,13 +36,24 @@ func NewDriver(model, apikey string) (*Driver, error) {
 type Driver struct {
 	client *openai.Client
 	model  string
+	cache  []string
+}
+
+func (d *Driver) CreateCache(ctx context.Context, context []string, ttl time.Duration) error {
+	d.cache = context
+	return nil
+}
+
+func (d *Driver) ClearCache(ctx context.Context) error {
+	d.cache = nil
+	return nil
 }
 
 func (d *Driver) QueryWithText(ctx context.Context, input string, context []string) ([]string, map[string]int64, error) {
 	messages := []openai.ChatCompletionMessageParamUnion{
 		openai.UserMessage(input),
 	}
-	for _, c := range context {
+	for _, c := range append(context, d.cache...) {
 		messages = append(messages, openai.UserMessage(c))
 	}
 	param := openai.ChatCompletionNewParams{
